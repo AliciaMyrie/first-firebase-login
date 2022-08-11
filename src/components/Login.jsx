@@ -3,7 +3,9 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -33,6 +35,18 @@ function Login({ setIsLoggedIn }) {
     );
     //if all ok ..
     if (user) setIsLoggedIn(true);
+  };
+
+  const handleGoogleLogin = async () => {
+    const auth = await connectAuth();
+    const provider = new GoogleAuthProvider();
+    const user = await signInWithPopup(auth, provider).catch((err) =>
+      alert(err.message)
+    );
+    if (user) {
+      console.log(user.user);
+      setIsLoggedIn(true);
+    }
   };
 
   const handleSignUp = async () => {
@@ -76,6 +90,8 @@ function Login({ setIsLoggedIn }) {
       <br />
       <button onClick={handleLogin}>Login</button>&nbsp;
       <button onClick={handleSignUp}>Sign Up</button>
+      <br />
+      <button onClick={handleGoogleLogin}>Login with Google</button>
     </form>
   );
 }
